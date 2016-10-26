@@ -10,13 +10,16 @@ int rand_int() {
   int random_int = 0;
   int file_id = open("/dev/random", O_RDONLY);
   int err_message = read(file_id, &random_int, 4);
-
-  if ( err_message == -1 ) {
+  if ( err_message == -1 || file_id == -1) {
     printf("!!!!!!!!!!!ERROR!!!!!!!!!!: %s", strerror(errno));
     return -1;
   }
 
-  close(file_id);
+  err_message = close(file_id);
+  if ( err_message == -1 ) {
+    printf("!!!!!!!!!!!ERROR!!!!!!!!!!: %s", strerror(errno));
+  }
+
   return random_int;
 }
 
@@ -27,14 +30,20 @@ int main() {
   printf("Generating random numbers:\n");
   for ( i = 0; i < 10; i++ ) {
     nums[i] = rand_int();
-    //nums[i]=i;
     printf("random %d: %d\n", i, nums[i]);
   }
 
   printf("\nWriting numbers to file...\n");
-  int file_id = open("./text", O_CREAT|O_APPEND|O_WRONLY, 0644);
+  int file_id = open("./text", O_CREAT|O_WRONLY, 0644);
+  if ( file_id == -1 ) {
+    printf("!!!!!!!!!!!ERROR!!!!!!!!!!: %s", strerror(errno));
+  }
+  int err_message;
   for ( i = 0; i < 10; i++ ) {
-    write(file_id, &nums[i], sizeof(int));
+    err_message = write(file_id, &nums[i], sizeof(int));
+    if ( err_message == -1 ) {
+      printf("!!!!!!!!!!!ERROR!!!!!!!!!!: %s", strerror(errno));
+    }
   }
   close(file_id);
 
@@ -43,16 +52,21 @@ int main() {
   int buff;
   int nums2[10];
   file_id = open("./text", O_RDONLY);
+  if ( file_id == -1 ) {
+    printf("!!!!!!!!!!!ERROR!!!!!!!!!!: %s", strerror(errno));
+  }
   for ( i = 0; i < 10; i++ ) {
-    read(file_id, &buff, sizeof(int));
+    err_message = read(file_id, &buff, sizeof(int));
+    if ( err_message == -1 ) {
+      printf("!!!!!!!!!!!ERROR!!!!!!!!!!: %s", strerror(errno));
+    }
     nums2[i]=buff;
     printf("random %d: %d\n", i, nums2[i]);
   }
-  close(file_id);
+  err_message = close(file_id);
+  if ( err_message == -1 ) {
+    printf("!!!!!!!!!!!ERROR!!!!!!!!!!: %s", strerror(errno));
+  }
   
-  
-  
-  //  printf("%d\n", rand_int());
-
   return 0;
 }
