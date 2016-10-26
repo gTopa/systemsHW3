@@ -27,11 +27,12 @@ int main() {
   printf("Generating random numbers:\n");
   for ( i = 0; i < 10; i++ ) {
     nums[i] = rand_int();
+    //nums[i]=i;
     printf("random %d: %d\n", i, nums[i]);
   }
 
   printf("\nWriting numbers to file...\n");
-  int file_id = open("./text", O_CREAT|O_APPEND|O_APPEND, 0644);
+  int file_id = open("./text", O_CREAT|O_APPEND|O_WRONLY, 0644);
   for ( i = 0; i < 10; i++ ) {
     write(file_id, &nums[i], sizeof(int));
   }
@@ -45,7 +46,7 @@ int main() {
   for ( i = 0; i < 10; i++ ) {
     read(file_id, &buff, sizeof(int));
     nums2[i]=buff;
-    printf("random %d: %d\n", i, buff);
+    printf("random %d: %d\n", i, nums2[i]);
   }
   close(file_id);
   
