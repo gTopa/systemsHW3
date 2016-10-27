@@ -16,57 +16,59 @@ int rand_int() {
   }
 
   err_message = close(file_id);
-  if ( err_message == -1 ) {
+  if ( err_message == -1 ) 
     printf("!!!!!!!!!!!ERROR!!!!!!!!!!: %s", strerror(errno));
-  }
-
+  
   return random_int;
 }
 
 int main() {
-
   int nums[10];
   int i;
   printf("Generating random numbers:\n");
+  
+  // populate array
   for ( i = 0; i < 10; i++ ) {
     nums[i] = rand_int();
     printf("random %d: %d\n", i, nums[i]);
   }
 
+  // write entire array to file
   printf("\nWriting numbers to file...\n");
-  int file_id = open("./text", O_CREAT|O_WRONLY, 0644);
-  if ( file_id == -1 ) {
+  int file_id = open("./text", O_CREAT | O_WRONLY, 0644);
+  if ( file_id == -1 ) 
     printf("!!!!!!!!!!!ERROR!!!!!!!!!!: %s", strerror(errno));
-  }
-  int err_message;
-  for ( i = 0; i < 10; i++ ) {
-    err_message = write(file_id, &nums[i], sizeof(int));
-    if ( err_message == -1 ) {
-      printf("!!!!!!!!!!!ERROR!!!!!!!!!!: %s", strerror(errno));
-    }
-  }
-  close(file_id);
+  
+  int err_message = write(file_id, &nums, sizeof(nums));;
+  if ( err_message == -1 )
+    printf("!!!!!!!!!!!ERROR!!!!!!!!!!: %s", strerror(errno));
 
-  printf("\nReading numbers from file\n");
+  // close file
+  err_message = close(file_id);
+  if ( err_message == -1 )
+    printf("!!!!!!!!!!!ERROR!!!!!!!!!!: %s", strerror(errno));
 
+  
+  printf("\nReading numbers from file:\n");
   int buff;
   int nums2[10];
+  // open second file for reading
   file_id = open("./text", O_RDONLY);
-  if ( file_id == -1 ) {
+  if ( file_id == -1 )
     printf("!!!!!!!!!!!ERROR!!!!!!!!!!: %s", strerror(errno));
-  }
-  for ( i = 0; i < 10; i++ ) {
-    err_message = read(file_id, &buff, sizeof(int));
-    if ( err_message == -1 ) {
-      printf("!!!!!!!!!!!ERROR!!!!!!!!!!: %s", strerror(errno));
-    }
-    nums2[i]=buff;
-    printf("random %d: %d\n", i, nums2[i]);
-  }
+
+  // read the entire array on file and set the new array to its contents
+  err_message = read(file_id, &nums2, 40);
+  if ( err_message == -1 )
+    printf("!!!!!!!!!!!ERROR!!!!!!!!!!: %s", strerror(errno));
+
+  // print out the second array read from second file
+  for ( i = 0; i < 10; i++ )
+    printf("random: %d: %d\n", i, nums2[i]);
+
   err_message = close(file_id);
-  if ( err_message == -1 ) {
+  if ( err_message == -1 ) 
     printf("!!!!!!!!!!!ERROR!!!!!!!!!!: %s", strerror(errno));
-  }
   
   return 0;
 }
