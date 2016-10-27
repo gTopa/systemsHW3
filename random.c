@@ -1,3 +1,8 @@
+// Giovanni Topa and Calvin Vuong
+// MKS65 pd10
+// Work 3
+// 10-26-2016
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
