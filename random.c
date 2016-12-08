@@ -52,7 +52,6 @@ int main() {
   err_message = close(file_id);
   if ( err_message == -1 )
     printf("!!!!!!!!!!!ERROR!!!!!!!!!!: %s", strerror(errno));
-
   
   printf("\nReading numbers from file:\n");
   int buff;
@@ -63,7 +62,7 @@ int main() {
     printf("!!!!!!!!!!!ERROR!!!!!!!!!!: %s", strerror(errno));
 
   // read the entire array on file and set the new array to its contents
-  err_message = read(file_id, &nums2, 40);
+  err_message = read(file_id, &nums2, sizeof(nums2));
   if ( err_message == -1 )
     printf("!!!!!!!!!!!ERROR!!!!!!!!!!: %s", strerror(errno));
 
